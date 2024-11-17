@@ -1,24 +1,33 @@
+
+import React, { useState } from 'react';
 import logo from './logo.svg';
 import './App.css';
+import Counter from './components/counter';
+import SearchForm from './components/searchForm';
+import GenreSelect from './components/genreSelect';
 
 function App() {
+
+const genres = ['All', 'Action', 'Romance', 'Horror' , 'Adventure', 'Comedy', 'Drama'];
+const [selectedGenre, setSelectedGenre] = useState('All');
+
+const handleSearch = (query) => {
+  alert(`Performing a search for your movie: ${query}`);
+};
+
+const handleGenreSelect = (genre) => {
+  setSelectedGenre(genre);
+  alert(`Performing a search for selected genre: ${genre}`);
+};
+
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <Counter initialValue={5} />
+      <h1>FIND YOUR MOVIE</h1>
+      <SearchForm initialQuery="" onSearch={handleSearch} />
+      <GenreSelect genres={genres} selectedGenre={selectedGenre} onSelect={handleGenreSelect} />
     </div>
+    
   );
 }
 
