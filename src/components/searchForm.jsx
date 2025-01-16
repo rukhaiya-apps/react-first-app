@@ -30,7 +30,7 @@ class SearchForm extends Component {
           placeholder="What do you want to watch..."
           value={this.state.query}
           onChange={this.handleInputChange}
-          onKeyUp={this.handleKeyPress}
+          onKeyDown={this.handleKeyPress}
           style={{ width: "30%" }}
         />
         <button onClick={this.handleSearch}>Search</button>
