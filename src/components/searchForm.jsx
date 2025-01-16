@@ -23,19 +23,18 @@ class SearchForm extends Component {
     }
   };
   render() {
-    return React.createElement(
-      "div",
-      null,
-
-      React.createElement("input", {
-        type: "text",
-        value: this.state.query,
-        onChange: this.handleInputChange,
-        onKeyPress: this.handleKeyPress,
-        placeholder: "What do you want to watch?",
-      }),
-
-      React.createElement("button", { onClick: this.handleSearch }, "Search")
+    return (
+      <div className="search-form">
+        <input
+          type="text"
+          placeholder="What do you want to watch..."
+          value={this.state.query}
+          onChange={this.handleInputChange}
+          onKeyUp={this.handleKeyPress}
+          style={{ width: "30%" }}
+        />
+        <button onClick={this.handleSearch}>Search</button>
+      </div>
     );
   }
 }
