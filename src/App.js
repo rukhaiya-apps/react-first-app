@@ -5,6 +5,9 @@ import './App.css';
 import Counter from './components/counter';
 import SearchForm from './components/searchForm';
 import GenreSelect from './components/genreSelect';
+import MovieList from './components/MoviesList/movieslist';
+import Header from './components/Header/header';
+import Footer from './components/Footer/footer';
 
 function App() {
 
@@ -26,6 +29,7 @@ const handleGenreSelect = (genre) => {
       <h1>FIND YOUR MOVIE</h1>
       <SearchForm initialQuery="golmaal3" onSearch={handleSearch} />
       <GenreSelect genres={genres} selectedGenre={selectedGenre} onSelect={handleGenreSelect} />
+      <div><MovieList/></div>    
     </div>
   );
 }
