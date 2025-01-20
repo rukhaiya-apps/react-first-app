@@ -6,7 +6,7 @@ class Counter extends Component {
     this.state = {
       count: props.initialValue || 0,
     };
-  } 
+  }
 
   increment = () => {
     this.setState({ count: this.state.count + 1 });
@@ -19,14 +19,18 @@ class Counter extends Component {
   render() {
     return React.createElement(
       "div",
-      null,
+      { className: "counter-container" },
       React.createElement("h1", null, `Count: ${this.state.count}`),
       React.createElement(
         "button",
-        { onClick: this.increment, style: { marginRight: "10px" } },
+        { className: "counter-button-inc", onClick: this.increment },
         "Increment"
       ),
-      React.createElement("button", { onClick: this.decrement }, "Decrement")
+      React.createElement(
+        "button",
+        { className: "counter-button-dec", onClick: this.decrement },
+        "Decrement"
+      )
     );
   }
 }

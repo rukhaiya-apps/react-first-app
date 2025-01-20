@@ -24,10 +24,9 @@ const handleGenreSelect = (genre) => {
     <div className="App">
       <Counter initialValue={5} />
       <h1>FIND YOUR MOVIE</h1>
-      <SearchForm initialQuery="" onSearch={handleSearch} />
+      <SearchForm initialQuery="golmaal3" onSearch={handleSearch} />
       <GenreSelect genres={genres} selectedGenre={selectedGenre} onSelect={handleGenreSelect} />
     </div>
-    
   );
 }
 
