@@ -1,18 +1,17 @@
 
 import React, { useState } from 'react';
-import logo from './logo.svg';
 import './App.css';
 import Counter from './components/counter';
 import SearchForm from './components/searchForm';
-import GenreSelect from './components/genreSelect';
-import MovieList from './components/MoviesList/movieslist';
-import Header from './components/Header/header';
-import Footer from './components/Footer/footer';
+import MoviesList from './components/Movies/MovieList';
+import './index.css';
+import './components/Header/header.css';
+import SortAndGenreControl from './components/SortAndGenreControl/SortAndGenreControl';
 
 function App() {
 
-const genres = ['All', 'Action', 'Romance', 'Horror' , 'Adventure', 'Comedy', 'Drama'];
-const [selectedGenre, setSelectedGenre] = useState('All');
+const [selectedGenre, setSelectedGenre] = useState(null);
+const [currentSort, setCurrentSort] = useState('releaseDate');
 
 const handleSearch = (query) => {
   alert(`Performing a search for your movie: ${query}`);
@@ -23,13 +22,25 @@ const handleGenreSelect = (genre) => {
   alert(`Performing a search for selected genre: ${genre}`);
 };
 
+const handleSortChange = (sortOption) => {
+  setCurrentSort(sortOption);
+  alert(`Sorted By: ${sortOption}`);
+};
+
   return (
-    <div className="App">
+    <div className="div-container">
       <Counter initialValue={5} />
-      <h1>FIND YOUR MOVIE</h1>
-      <SearchForm initialQuery="golmaal3" onSearch={handleSearch} />
-      <GenreSelect genres={genres} selectedGenre={selectedGenre} onSelect={handleGenreSelect} />
-      <div><MovieList/></div>    
+      <SearchForm initialSearchQuery="What do you want to watch?" onSearch={handleSearch} />
+      <SortAndGenreControl
+        genres={['All', 'Documentary', 'Comedy', 'Horror', 'Crime']}
+        selectedGenre={selectedGenre}
+        onSelect={handleGenreSelect}
+        currentSort={currentSort}
+        onSortChange={handleSortChange}
+      />
+      <br />
+      <MoviesList />
+      <br />   
     </div>
   );
 }
