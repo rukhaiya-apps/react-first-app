@@ -52,7 +52,7 @@ const [isDialogOpen, setIsDialogOpen] = useState(false);
         <MovieForm initialMovie={movieData} onSubmit={(data) => handleMovieFormSubmit(data)} />
       </Dialog>
     )}     
- <Counter initialValue={10} />
+ <Counter initialValue={5} />
       <SearchForm initialSearchQuery="What do you want to watch?" onSearch={handleSearch} />
       <SortAndGenreControl
         genres={['All', 'Documentary', 'Comedy', 'Horror', 'Crime', 'Action']}
