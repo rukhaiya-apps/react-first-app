@@ -44,31 +44,26 @@ const [isDialogOpen, setIsDialogOpen] = useState(false);
   };
 
   return (
-    <>
+    <div className="div-container">
+    <button className="add-movie-button" onClick={openDialog}>Add Movie</button>
     {isDialogOpen && (
       <Dialog title="ADD MOVIE" onClose={closeDialog}>
         <MovieForm initialMovie={movieData} onSubmit={(data) => handleMovieFormSubmit(data)} />
       </Dialog>
     )}     
-   {!isDialogOpen && (
-    <div className="div-container">
-    <button onClick={openDialog}>Add Movie</button>
-   <Counter initialValue={5} />
-   <SearchForm initialSearchQuery="What do you want to watch?" onSearch={handleSearch} />
-   <SortAndGenreControl
-     genres={['All', 'Documentary', 'Comedy', 'Horror', 'Crime']}
-     selectedGenre={selectedGenre}
-     onSelect={handleGenreSelect}
-     currentSort={currentSort}
-     onSortChange={handleSortChange}
-   />
-   <br />
-   <MoviesList onMovieEdit={openDialog} /> {/* Pass the openDialog function to the MoviesList */}
-   <br />
- </div>
-  )
-  }
-  </>
+ <Counter initialValue={10} />
+      <SearchForm initialSearchQuery="What do you want to watch?" onSearch={handleSearch} />
+      <SortAndGenreControl
+        genres={['All', 'Documentary', 'Comedy', 'Horror', 'Crime', 'Action']}
+        selectedGenre={selectedGenre}
+        onSelect={handleGenreSelect}
+        currentSort={currentSort}
+        onSortChange={handleSortChange}
+      />
+      <br />
+      <MoviesList onMovieEdit={openDialog} /> {/* Pass the openDialog function to the MoviesList */}
+      <br />
+    </div>
 );
 }
 
