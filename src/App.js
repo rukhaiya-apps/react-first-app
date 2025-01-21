@@ -21,6 +21,7 @@ const handleSearch = (query) => {
 };
 
 const handleMovieFormSubmit = (data) => {
+  closeDialog();
   alert(`Submiting data: ${data}`);
 };
 

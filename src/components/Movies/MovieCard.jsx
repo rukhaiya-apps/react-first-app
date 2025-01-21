@@ -13,6 +13,7 @@ class MovieCard extends Component {
       showEditMenu: false,
       isEditDialogOpen: false,
       movieData: null,
+      isDeleteDialogOpen: false, // Add a state variable for the delete confirmation dialog
     };
   }
 
@@ -41,6 +42,27 @@ class MovieCard extends Component {
       showEditMenu: false,
     });
   };
+  // Function to open the delete confirmation dialog
+  openDeleteDialog = () => {
+    this.setState({
+      isDeleteDialogOpen: true,
+      showEditMenu: false,
+    });
+  };
+
+  // Function to close the delete confirmation dialog
+  closeDeleteDialog = () => {
+    this.setState({
+      isDeleteDialogOpen: false,
+    });
+  };
+
+  handleDelete = () => {
+    // Handle the deletion of the movie here
+    // You can call an API or perform other necessary actions
+    // After the deletion is successful, you can close the dialog
+    this.closeDeleteDialog();
+  };
 
   render() {
     return (
@@ -55,8 +77,11 @@ class MovieCard extends Component {
               onClick={() => this.openEditDialog(this.props.film)}
             >
               Edit Movie
-            </div>
-            <div className="edit-option">Delete Movie</div>
+            </div>{" "}
+            <div className="edit-option" onClick={this.openDeleteDialog}>
+              Delete Movie
+            </div>{" "}
+            {/* Open delete confirmation dialog */}
           </div>
         )}
         <MovieImage
@@ -80,6 +105,16 @@ class MovieCard extends Component {
                 this.closeEditDialog();
               }}
             />
+          </Dialog>
+        )}
+        {this.state.isDeleteDialogOpen && (
+          <Dialog title="DELETE MOVIE" onClose={this.closeDeleteDialog}>
+            <div>Are you sure you want to delete this movie?</div>
+            <div className="delete-dialog-buttons">
+              <button onClick={this.handleDelete}>Confirm</button> &nbsp;&nbsp;
+              &nbsp;&nbsp;&nbsp;
+              <button onClick={this.closeDeleteDialog}>Cancel</button>
+            </div>
           </Dialog>
         )}
       </div>
