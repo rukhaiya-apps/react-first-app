@@ -1,7 +1,6 @@
 import React from 'react';
 import MovieListPage from './components/MovieListPage';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import MovieDetails from './components/Movies/MovieDetails';
 
 
 function App() {
@@ -10,7 +9,7 @@ function App() {
     <Router>
     <Routes>
       <Route path="/" element={<MovieListPage />} />
-      <Route path="/:movieId" element={<MovieDetails />} />
+   <Route path="/:movieIdParam" element={<MovieListPage />} />
     </Routes>
   </Router>
   );
