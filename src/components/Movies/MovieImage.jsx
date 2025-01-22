@@ -16,6 +16,7 @@ function MovieImage({ img, filmTitle, film }) {
     if (!showModal) {
       document.addEventListener("keydown", handleKeyPress);
     } else {
+      removePathParam();
       document.removeEventListener("keydown", handleKeyPress);
     }
   };
@@ -25,16 +26,24 @@ function MovieImage({ img, filmTitle, film }) {
       setShowModal(false);
     }
   };
+  const removePathParam = () => {
+    const urlParams = new URLSearchParams(window.location.search);
+    const newPath = "/";
+    const newUrl = `${newPath}?${urlParams.toString()}`;
+    window.history.pushState({}, "", newUrl);
+  };
+
   const handleMovieClick = () => {
+    addPathParam();
+    setShowModal(true);
+  };
+
+  const addPathParam = () => {
     const searchParams = new URLSearchParams(location.search);
-    // Update path parameter
-    //searchParams.set('movieId', film.id);
-    // Build the new URL
     const newPath = `/${film.id}`;
     const newUrl = `${newPath}?${searchParams.toString()}`;
     // Update the URL without redirection
     window.history.pushState({}, "", newUrl);
-    setShowModal(true);
   };
 
   return (

@@ -17,7 +17,6 @@ import { useSearchParams, useNavigate, Link } from 'react-router-dom';
 function MovieListPage() {
   const [selectedGenre, setSelectedGenre] = useState('');
   const [currentSort, setCurrentSort] = useState('releaseDate');
-  const [selectedMovie, setSelectedMovie] = useState(null);
   const [searchQuery, setSearchQuery] = useState('');
   const [movies, setMovies] = useState([]);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
@@ -78,7 +77,7 @@ navigate(`/?${params.toString()}`);
           limit: limit,
           sortBy: currentSort,
           sortOrder: 'desc',
-          filter: searchQuery ? null : selectedGenre,
+          filter: searchQuery ? null : (selectedGenre === 'All' ? null : selectedGenre),
         };
         const response = await axios.get('http://localhost:4000/movies', { params });
       setMovies(response.data.data);
@@ -119,7 +118,7 @@ navigate(`/?${params.toString()}`);
 
   const handleGenreChange = (query) => {
     setSearchQuery(null);
-    setSelectedGenre(query === 'All' ? null : query);
+    setSelectedGenre(query);
     setOffset(0);
   };
 
@@ -169,9 +168,6 @@ navigate(`/?${params.toString()}`);
           </div>
         </div>
       )}
-      {selectedMovie ? (
-   <Link to={`/${selectedMovie.id}`}>View Movie Details</Link> // Using Link from react-router-dom
-      ) : (
         <>
           <MoviesList
             searchQuery={searchQuery}
@@ -190,7 +186,6 @@ navigate(`/?${params.toString()}`);
             <button onClick={handleNextPage}>&nbsp;&nbsp;&nbsp;Next Page&nbsp;&nbsp;&nbsp;</button>
           </div>
         </>
-      )}
       <br />
     </div>
   );
