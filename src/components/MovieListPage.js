@@ -150,7 +150,7 @@ navigate(`/?${params.toString()}`);
         </Dialog>
       )}
       <Counter initialValue={5} />
-      <SearchForm initialSearchQuery="What do you want to watch?" onSearch={handleSearch} />
+      <SearchForm query={searchQuery} onSearch={handleSearch} />
       <SortAndGenreControl
         genres={['All', 'Documentary', 'Comedy', 'Horror', 'Crime', 'Action']}
         selectedGenre={selectedGenre}
