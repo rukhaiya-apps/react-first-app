@@ -6,10 +6,10 @@ import '../index.css';
 import '../components/Header/header.css';
 import MoviesList from './Movies/MovieList';
 import SortAndGenreControl from './SortAndGenreControl/SortAndGenreControl';
-import Dialog from './Dialog'; // Import the Dialog component
-import MovieForm from './MovieForm'; // Import the MovieForm component
+import Dialog from './Dialog';
+import MovieForm from './MovieForm';
 import 'font-awesome/css/font-awesome.min.css';
-import MovieDetails from '../components/Movies/MovieDetails'; 
+import MovieDetails from '../components/Movies/MovieDetails';
 
 
 function MovieListPage() {
@@ -19,8 +19,12 @@ function MovieListPage() {
   const [searchQuery, setSearchQuery] = useState('');
   const [movies, setMovies] = useState([]);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const [offset, setOffset] = useState(0);
+  const limit = 12;
+  const [totalAmount, setTotalAmount] = useState(0)
 
   useEffect(() => {
+    //console.log('use effect triggered');
     const abortController = new AbortController();
     const signal = abortController.signal;
 
@@ -28,19 +32,23 @@ function MovieListPage() {
       try {
         const params = {
           search: searchQuery,
-          offset: 0, // Add the offset parameter if needed
-          limit: 10, // Add the limit parameter if needed
+          searchBy: searchQuery ? 'title' : 'genres',
+          offset: offset,
+          limit: limit,
           sortBy: currentSort,
-          filter: selectedGenre,
+          sortOrder: 'desc',
+          filter: searchQuery ? null : selectedGenre,
         };
         const response = await axios.get('http://localhost:4000/movies', {
           params,
           signal,
         });
-        console.log('params:', params);
-        console.log('response:', response);
-    
+        //console.log('params:', params);
+        //console.log('response:', response);
+
         setMovies(response.data.data);
+        setTotalAmount(response.data.totalAmount);
+        //console.log('totalAmount' + totalAmount);
       } catch (error) {
         console.error('Error fetching data:', error);
       }
@@ -49,7 +57,7 @@ function MovieListPage() {
     fetchData();
 
     return () => abortController.abort();
-  }, [searchQuery, currentSort, selectedGenre]);
+  }, [searchQuery, currentSort, selectedGenre, offset]);
 
   const handleMovieSelect = (movie) => {
     setSelectedMovie(movie);
@@ -70,8 +78,33 @@ function MovieListPage() {
   };
 
   const handleSearch = (query) => {
+    //console.log('Search button clicked:', query);
     setSearchQuery(query);
+    setSelectedGenre(null);
+    setOffset(0);
   };
+
+  const handleGenreChange = (query) => {
+    //console.log('genre changed to:', query);
+    setSearchQuery(null);
+    setSelectedGenre(query === 'All' ? null : query);
+    setOffset(0);
+  };
+
+  const handleNextPage = () => {
+    setOffset(offset + limit);
+  };
+
+  const handlePrevPage = () => {
+    if (offset >= limit) {
+      setOffset(offset - limit);
+    }
+  };
+
+  const currentPage = Math.floor(offset / limit) + 1;
+  //console.log( 'totalAmount: '+ totalAmount);
+  const totalPages = Math.ceil(totalAmount / limit);
+  //console.log('totalPages: '+ totalPages);
 
   return (
     <div className="div-container">
@@ -88,7 +121,7 @@ function MovieListPage() {
       <SortAndGenreControl
         genres={['All', 'Documentary', 'Comedy', 'Horror', 'Crime', 'Action']}
         selectedGenre={selectedGenre}
-        onSelect={setSelectedGenre}
+        onSelect={handleGenreChange}
         currentSort={currentSort}
         onSortChange={setCurrentSort}
       />
@@ -96,13 +129,24 @@ function MovieListPage() {
       {selectedMovie ? (
         <MovieDetails movieInfo={selectedMovie} />
       ) : (
-        <MoviesList
-          searchQuery={searchQuery}
-          selectedGenre={selectedGenre}
-          currentSort={currentSort}
-          onMovieSelect={handleMovieSelect}
-          movies={movies}
-        />
+        <>
+          <MoviesList
+            searchQuery={searchQuery}
+            selectedGenre={selectedGenre}
+            currentSort={currentSort}
+            onMovieSelect={handleMovieSelect}
+            movies={movies}
+          />
+          <div>
+            <button onClick={handlePrevPage} disabled={offset === 0}>
+              Previous Page
+            </button>
+            <span>
+            &nbsp;&nbsp;Page {currentPage} of {totalPages}&nbsp;&nbsp;
+              </span>
+            <button onClick={handleNextPage}>&nbsp;&nbsp;&nbsp;Next Page&nbsp;&nbsp;&nbsp;</button>
+          </div>
+        </>
       )}
       <br />
     </div>
