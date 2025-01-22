@@ -10,10 +10,11 @@ import Dialog from './Dialog';
 import MovieForm from './MovieForm';
 import 'font-awesome/css/font-awesome.min.css';
 import MovieDetails from '../components/Movies/MovieDetails';
+import { useSearchParams, useNavigate } from 'react-router-dom';
 
 
 function MovieListPage() {
-  const [selectedGenre, setSelectedGenre] = useState(null);
+  const [selectedGenre, setSelectedGenre] = useState('');
   const [currentSort, setCurrentSort] = useState('releaseDate');
   const [selectedMovie, setSelectedMovie] = useState(null);
   const [searchQuery, setSearchQuery] = useState('');
@@ -21,43 +22,53 @@ function MovieListPage() {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [offset, setOffset] = useState(0);
   const limit = 12;
-  const [totalAmount, setTotalAmount] = useState(0)
+  const [totalAmount, setTotalAmount] = useState(0);
+  const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
 
   useEffect(() => {
-    //console.log('use effect triggered');
-    const abortController = new AbortController();
-    const signal = abortController.signal;
+    const params = new URLSearchParams(searchParams);
+    setSearchQuery(params.get('query') || '');
+    setSelectedGenre(params.get('genre') || '');
+    setCurrentSort(params.get('sortBy') || 'releaseDate'); // Ensure consistent casing
+    setOffset(parseInt(params.get('offset')) || 0);
+  }, [searchParams]);
 
+  // Function to update URL parameters when state changes
+useEffect(() => {
+const params = new URLSearchParams();
+if (searchQuery) params.set('query', searchQuery);
+if (selectedGenre) params.set('genre', selectedGenre);
+if (currentSort) params.set('sortBy', currentSort);
+params.set('offset', offset.toString()); // Include offset in URL params
+
+navigate(`/?${params.toString()}`);
+}, [searchQuery, selectedGenre, currentSort, offset, navigate]);
+
+
+
+  useEffect(() => {
     const fetchData = async () => {
       try {
         const params = {
           search: searchQuery,
           searchBy: searchQuery ? 'title' : 'genres',
-          offset: offset,
+          offset: offset, // Use the updated offset from state
           limit: limit,
           sortBy: currentSort,
           sortOrder: 'desc',
           filter: searchQuery ? null : selectedGenre,
         };
-        const response = await axios.get('http://localhost:4000/movies', {
-          params,
-          signal,
-        });
-        //console.log('params:', params);
-        //console.log('response:', response);
+        const response = await axios.get('http://localhost:4000/movies', { params });
+      setMovies(response.data.data);
+      setTotalAmount(response.data.totalAmount);
+    } catch (error) {
+      console.error('Error fetching data:', error);
+    }
+  };
 
-        setMovies(response.data.data);
-        setTotalAmount(response.data.totalAmount);
-        //console.log('totalAmount' + totalAmount);
-      } catch (error) {
-        console.error('Error fetching data:', error);
-      }
-    };
-
-    fetchData();
-
-    return () => abortController.abort();
-  }, [searchQuery, currentSort, selectedGenre, offset]);
+  fetchData();
+}, [searchQuery, currentSort, selectedGenre, offset, limit]);
 
   const handleMovieSelect = (movie) => {
     setSelectedMovie(movie);
@@ -78,14 +89,12 @@ function MovieListPage() {
   };
 
   const handleSearch = (query) => {
-    //console.log('Search button clicked:', query);
     setSearchQuery(query);
     setSelectedGenre(null);
     setOffset(0);
   };
 
   const handleGenreChange = (query) => {
-    //console.log('genre changed to:', query);
     setSearchQuery(null);
     setSelectedGenre(query === 'All' ? null : query);
     setOffset(0);
@@ -102,9 +111,7 @@ function MovieListPage() {
   };
 
   const currentPage = Math.floor(offset / limit) + 1;
-  //console.log( 'totalAmount: '+ totalAmount);
   const totalPages = Math.ceil(totalAmount / limit);
-  //console.log('totalPages: '+ totalPages);
 
   return (
     <div className="div-container">
@@ -143,7 +150,7 @@ function MovieListPage() {
             </button>
             <span>
             &nbsp;&nbsp;Page {currentPage} of {totalPages}&nbsp;&nbsp;
-              </span>
+            </span>
             <button onClick={handleNextPage}>&nbsp;&nbsp;&nbsp;Next Page&nbsp;&nbsp;&nbsp;</button>
           </div>
         </>
