@@ -4,7 +4,7 @@ import MovieImage from "./MovieImage";
 import MovieInfo from "./MovieInfo";
 import "./movie.css";
 import Dialog from "../Dialog";
-import MovieForm from "../MovieForm";
+import EditMovieDialog from "../EditMovieDialog";
 
 function MovieCard(props) {
   const [showEditMenu, setShowEditMenu] = useState(false);
@@ -22,6 +22,11 @@ function MovieCard(props) {
     setMovieData(data);
     updatePathWithMovieId(data);
   };
+  const openDeleteDialog = () => {
+    setIsDeleteDialogOpen(true);
+    setShowEditMenu(false);
+  };
+
   const updatePathWithMovieId = (data) => {
     const urlParams = new URLSearchParams(window.location.search);
     const movieId = data.id;
@@ -85,17 +90,15 @@ function MovieCard(props) {
         year={props.year}
       />
       {isEditDialogOpen && (
-        <Dialog title="Edit Movie" onClose={closeEditDialog}>
-          <MovieForm
+        <>
+          <EditMovieDialog
+            title="Edit Movie"
+            onClose={closeEditDialog}
             initialMovie={movieData}
-            onSubmit={(data) => {
-              // Handle editing movie data here
-              console.log("Editing movie data:", data);
-              props.handleMovieEditFormSubmit(data);
-              closeEditDialog();
-            }}
+            handleMovieEditFormSubmit={props.handleMovieEditFormSubmit}
+            closeEditDialog={closeEditDialog}
           />
-        </Dialog>
+        </>
       )}
       {isDeleteDialogOpen && (
         <Dialog title="DELETE MOVIE" onClose={closeDeleteDialog}>
