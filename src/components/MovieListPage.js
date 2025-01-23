@@ -21,7 +21,7 @@ function MovieListPage() {
   const [movies, setMovies] = useState([]);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [offset, setOffset] = useState(0);
-  const limit = 7;
+  const limit = 8;
   const [totalAmount, setTotalAmount] = useState(0);
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
@@ -109,10 +109,20 @@ if (movieIdParam) {
     setIsDialogOpen(false);
   };
 
-  const handleMovieFormSubmit = (data) => {
-    closeDialog();
-    alert(`Submitting data: ${JSON.stringify(data)}`);
-    // Add logic to send the data to the backend
+  const handleMovieFormSubmit = async (data) => {
+    try {
+      closeDialog();
+      //alert(`Submitting data: ${JSON.stringify(data)}`);
+      const response = await axios.post('http://localhost:4000/movies', data);
+      const newMovieId = response.data.id;
+      //alert('newMovieId: '+newMovieId);
+      const urlParams = new URLSearchParams(window.location.search);
+      const newUrl = `/${newMovieId}?${urlParams.toString()}`;
+      //alert ('newURL' + newUrl);
+      navigate(newUrl);
+    } catch (error) {
+      console.error('Error adding movie:', error);
+    }
   };
 
   const handleSearch = (query) => {
