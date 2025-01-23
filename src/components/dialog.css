@@ -53,3 +53,8 @@
     font-family: Arial, sans-serif;
     background: #ecf0f1;
   }
+  .dialog-title {
+    text-align: center;
+    margin: 0;
+    flex-grow: 1; /* To occupy remaining space */
+  }
