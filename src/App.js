@@ -10,6 +10,7 @@ function App() {
     <Routes>
       <Route path="/" element={<MovieListPage />} />
    <Route path="/:movieIdParam" element={<MovieListPage />} />
+   <Route path="/new" element={<MovieListPage />} />
     </Routes>
   </Router>
   );

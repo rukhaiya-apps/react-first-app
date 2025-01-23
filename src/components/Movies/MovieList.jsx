@@ -3,7 +3,7 @@ import "./movie.css";
 // MoviesList.js
 import React from "react";
 
-function MoviesList({ movies, onMovieSelect }) {
+function MoviesList({ movies, onMovieSelect, handleMovieEditFormSubmit }) {
   const renderingArray = movies.map((input) => {
     const idCount = input.id;
 
@@ -20,6 +20,7 @@ function MoviesList({ movies, onMovieSelect }) {
           runtime={input.runtime}
           film={input}
           onSelect={() => onMovieSelect(input)}
+          handleMovieEditFormSubmit={handleMovieEditFormSubmit}
         />
       </article>
     );
